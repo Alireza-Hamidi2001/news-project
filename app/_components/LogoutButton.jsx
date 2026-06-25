@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 import LogoutModal from "./LogoutModal";
+import { LuLogOut } from "react-icons/lu";
 
 export default function LogoutButton({ variant = "default" }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,15 +12,14 @@ export default function LogoutButton({ variant = "default" }) {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    // استایل‌های مختلف
     if (variant === "sidebar") {
         return (
             <>
                 <button
                     onClick={openModal}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="w-[100%] flex items-center gap-3 px-4 py-2.5 text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
-                    <FaSignOutAlt className="w-8 h-8" />
+                    <LuLogOut className="w-8 h-8" />
                     <span>Logout</span>
                 </button>
                 <LogoutModal
@@ -38,7 +38,7 @@ export default function LogoutButton({ variant = "default" }) {
                     className="text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
                     title="Logout"
                 >
-                    <FaSignOutAlt className="w-7 h-7" />
+                    <LuLogOut className="w-7 h-7" />
                 </button>
                 <LogoutModal
                     isOpen={isModalOpen}

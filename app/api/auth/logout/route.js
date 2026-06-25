@@ -1,12 +1,9 @@
-// app/api/auth/logout/route.js
 import { NextResponse } from "next/server";
-import { removeAuthCookie } from "@/lib/auth/cookies";
+import { logoutUser } from "@/lib/auth/auth";
 
 export async function POST() {
-    console.log("🔍 [API Logout] Received logout request");
     try {
-        await removeAuthCookie(); // عملیات حذف در اینجا انجام می‌شود
-        console.log("✅ [API Logout] Logout successful");
+        await logoutUser();
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("❌ [API Logout] Error:", error.message);

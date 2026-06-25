@@ -1,42 +1,59 @@
-import {
-    createWriter,
-    getAllWriters,
-    isAdmin,
-    getCurrentUser,
-} from "@/lib/auth/auth";
+// app/api/auth/writers/route.js
+import { createWriter } from "@/lib/auth/auth";
 import { NextResponse } from "next/server";
 
-// GET all writers (admin only)
-export async function GET() {
-    try {
-        const writers = await getAllWriters();
-        return NextResponse.json({ writers });
-    } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 403 });
-    }
-}
-
-// POST create new writer (admin only)
 export async function POST(request) {
+    console.log("🔍 [API Writers] Creating new writer...");
+
     try {
         const body = await request.json();
-        const { email, password, full_name, username } = body;
+        const { full_name, username, email, password } = body;
 
-        if (!email || !password || !full_name || !username) {
+        // Validation
+        if (!full_name || !username || !email || !password) {
             return NextResponse.json(
                 { error: "All fields are required" },
                 { status: 400 },
             );
         }
 
+        if (username.length < 3) {
+            return NextResponse.json(
+                { error: "Username must be at least 3 characters" },
+                { status: 400 },
+            );
+        }
+
+        if (password.length < 6) {
+            return NextResponse.json(
+                { error: "Password must be at least 6 characters" },
+                { status: 400 },
+            );
+        }
+
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            return NextResponse.json(
+                { error: "Invalid email format" },
+                { status: 400 },
+            );
+        }
+
         const user = await createWriter({
-            email,
-            password,
             full_name,
             username,
+            email,
+            password,
         });
-        return NextResponse.json({ user });
+
+        return NextResponse.json({
+            success: true,
+            user: user,
+        });
     } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 403 });
+        console.error("❌ [API Writers] Error:", error.message);
+        return NextResponse.json(
+            { error: error.message || "Failed to create writer" },
+            { status: 500 },
+        );
     }
 }

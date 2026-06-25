@@ -3,27 +3,37 @@ import LogoutButton from "./LogoutButton";
 import avatarDefault from "@/public/user.png";
 import Image from "next/image";
 
-import { TfiComments } from "react-icons/tfi";
+import { GoCommentDiscussion } from "react-icons/go";
 import { FaEdit } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
-import { BsFillSignpost2Fill } from "react-icons/bs";
+import { IoNewspaper } from "react-icons/io5";
+import { BiSolidCategoryAlt } from "react-icons/bi";
+import { supabaseAdmin } from "@/lib/supabase";
 
-
-
-
-
-function DashboardSideNavigation({ isWriter, isAdmin, user }) {
+async function DashboardSideNavigation({ isWriter, isAdmin, user }) {
     const avatar = user.avatar_url || avatarDefault;
+    const pendingCount = await getPendingCount();
+
+    async function getPendingCount() {
+        const { count, error } = await supabaseAdmin
+            .from("news")
+            .select("*", { count: "exact", head: true })
+            .eq("status", "pending");
+
+        if (error) return 0;
+        return count || 0;
+    }
+
     return (
         <>
             {/* Sidebar */}
-            <aside className="bg-amber-50 dark:bg-emerald-950 border-r border-gray-300 dark:border-gray-700 p-6 relative">
-                <div className="mb-8 mx-auto relative w-[13rem] h-[13rem]">
+            <aside className="bg-amber-50 dark:bg-zinc-950 border-r border-gray-300 dark:border-gray-700 p-6 relative">
+                <div className="mb-8 mx-auto relative w-[10rem] h-[10rem] rounded-full">
                     <Image
                         fill
                         src={avatar}
                         alt="user avatar"
-                        className="object-top"
+                        className="object-cover object-top rounded-full"
                     />
                 </div>
                 <div className="mb-8 text-center">
@@ -38,7 +48,7 @@ function DashboardSideNavigation({ isWriter, isAdmin, user }) {
                     <ul className="space-y-2 mainText text-[1.4rem]">
                         <li>
                             <Link
-                                href="/dashboard/writers"
+                                href="/dashboard/newAuthor"
                                 className="menuList flex items-center gap-2"
                             >
                                 <FaUserFriends />
@@ -47,27 +57,26 @@ function DashboardSideNavigation({ isWriter, isAdmin, user }) {
                         </li>
                         <li>
                             <Link
-                                href="/dashboard/news"
-                                className="menuList flex items-center gap-2" 
+                                href="/dashboard/pendingPosts"
+                                className="menuList flex items-center justify-between"
                             >
-                                <FaEdit />
-                                Edit profile
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="/dashboard/comments"
-                                className="menuList flex items-center gap-2"
-                            >
-                                <TfiComments />
-                                Comments
+                                <span className="flex items-center gap-2">
+                                    <GoCommentDiscussion />
+                                    Pending posts
+                                </span>
+                                {pendingCount > 0 && (
+                                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                        {pendingCount}
+                                    </span>
+                                )}
                             </Link>
                         </li>
                         <li>
                             <Link
                                 href="/dashboard/categories"
-                                className="menuList"
+                                className="menuList flex items-center gap-2"
                             >
+                                <BiSolidCategoryAlt />
                                 Categories
                             </Link>
                         </li>
@@ -79,11 +88,20 @@ function DashboardSideNavigation({ isWriter, isAdmin, user }) {
                     <ul className="space-y-2 mt-4 mainText text-[1.4rem]">
                         <li>
                             <Link
-                                href="/dashboard/new-post"
+                                href="/dashboard/newPost"
                                 className="menuList flex items-center gap-2"
                             >
-                                <BsFillSignpost2Fill />
+                                <IoNewspaper />
                                 New Post
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="/dashboard/editProfile"
+                                className="menuList flex items-center gap-2"
+                            >
+                                <FaEdit />
+                                Edit profile
                             </Link>
                         </li>
                         {/* <li>

@@ -3,66 +3,39 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import demo from "@/public/demo.png";
+import { FaChevronLeft, FaChevronRight, FaUser } from "react-icons/fa";
+import Link from "next/link";
 
-const section_1 = [
-    {
-        id: 1,
-        title: "Breaking News: Global Summit 2024",
-        summary:
-            "World leaders gather to discuss climate change and sustainable development goals",
-        details:
-            "The annual summit brings together representatives from over 190 countries to address the most pressing environmental challenges of our time.",
-        image: demo,
-    },
-    {
-        id: 2,
-        title: "Tech Innovation Reaches New Heights",
-        summary:
-            "Revolutionary AI breakthrough promises to transform healthcare industry",
-        details:
-            "Scientists have developed a new artificial intelligence system capable of diagnosing diseases with unprecedented accuracy.",
-        image: demo,
-    },
-    {
-        id: 3,
-        title: "Economic Growth Surpasses Expectations",
-        summary:
-            "Global markets show strong recovery with record-breaking performance",
-        details:
-            "Major economies have reported higher than expected GDP growth in the latest quarterly reports.",
-        image: demo,
-    },
-    {
-        id: 4,
-        title: "Space Exploration: New Horizons",
-        summary: "NASA announces mission to explore distant exoplanets",
-        details:
-            "The new space telescope will search for signs of life in the habitable zones of nearby star systems.",
-        image: demo,
-    },
-];
-
-function Main() {
+export default function Main({ data = [] }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [direction, setDirection] = useState("next");
+
+    // اگر خبری نبود، نمایش پیام
+    if (!data || data.length === 0) {
+        return (
+            <section className="mb-4 md:mb-10 lg:mb-20 w-full overflow-hidden relative group">
+                <div className="h-[500px] sm:h-[550px] md:h-[calc(100vh-10rem)] lg:h-[calc(100vh-10rem)] flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-lg">
+                    <p className="text-gray-500 dark:text-gray-400 text-xl">
+                        No posts in Main section
+                    </p>
+                </div>
+            </section>
+        );
+    }
 
     const nextSlide = () => {
         if (isTransitioning) return;
         setIsTransitioning(true);
         setDirection("next");
-        setCurrentIndex((prev) => (prev + 1) % section_1.length);
+        setCurrentIndex((prev) => (prev + 1) % data.length);
     };
 
     const prevSlide = () => {
         if (isTransitioning) return;
         setIsTransitioning(true);
         setDirection("prev");
-        setCurrentIndex(
-            (prev) => (prev - 1 + section_1.length) % section_1.length,
-        );
+        setCurrentIndex((prev) => (prev - 1 + data.length) % data.length);
     };
 
     const goToSlide = (index) => {
@@ -79,11 +52,10 @@ function Main() {
         return () => clearTimeout(timer);
     }, [currentIndex]);
 
-    const currentItem = section_1[currentIndex];
+    const currentItem = data[currentIndex];
 
     return (
         <section className="mb-4 md:mb-10 lg:mb-20 w-full overflow-hidden relative group">
-            {/* ارتفاع مناسب برای موبایل و دسکتاپ */}
             <div className="h-[500px] sm:h-[550px] md:h-[calc(100vh-10rem)] lg:h-[calc(100vh-10rem)]">
                 {/* Navigation Buttons */}
                 <button
@@ -104,7 +76,7 @@ function Main() {
 
                 {/* Content */}
                 <div className="flex flex-col md:flex-row h-full">
-                    {/* Image - در موبایل بالا و در دسکتاپ چپ */}
+                    {/* Image */}
                     <div className="md:w-3/5 h-1/2 md:h-full relative">
                         <div
                             className="relative w-full h-full transition-all overflow-hidden duration-600 ease-in-out"
@@ -117,22 +89,27 @@ function Main() {
                                 opacity: isTransitioning ? 0.3 : 1,
                             }}
                         >
-                            <Image
-                                src={currentItem.image}
-                                alt={currentItem.title}
-                                fill
-                                className="object-cover md:object-contain hover:scale-110 transition-all duration-200"
-                                priority
-                                sizes="(max-width: 768px) 100vw, 60vw"
-                            />
+                            {currentItem.cover_image ? (
+                                <Image
+                                    src={currentItem.cover_image}
+                                    alt={currentItem.title}
+                                    fill
+                                    className="object-cover md:object-contain"
+                                    priority
+                                    sizes="(max-width: 768px) 100vw, 60vw"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                                    <span className="text-gray-500 dark:text-gray-400">
+                                        No Image
+                                    </span>
+                                </div>
+                            )}
                         </div>
-                        {/* Gradient Overlay */}
-                        {/* <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black md:bg-gradient-to-r md:from-black/30 md:via-transparent md:to-transparent"></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden"></div> */}
                     </div>
 
-                    {/* Text - در موبایل پایین و در دسکتاپ راست */}
-                    <div className="md:w-2/5 h-1/2 md:h-full p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center bg-linear-to-br from-black/20 dark:from-white/10 to-transparent backdrop-blur-sm">
+                    {/* Text */}
+                    <div className="md:w-2/5 h-1/2 md:h-full p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center bg-gradient-to-br from-black/20 dark:from-white/10 to-transparent backdrop-blur-sm">
                         <div
                             className="transition-all duration-600 ease-in-out"
                             style={{
@@ -151,19 +128,19 @@ function Main() {
                                 &mdash; {currentItem.summary}
                             </p>
                             <p className="postDetail">{currentItem.details}</p>
-                            <button className="postParagraph text-[1.2rem] cursor-pointer">
-                                Read more
-                                <span className="inline-block transition-all duration-300 group-hover:translate-x-1 group-hover:ml-1">
-                                    &rarr;
-                                </span>
-                            </button>
+                            <Link
+                                href={`/news/${currentItem.id}`}
+                                className="postParagraph text-[1.2rem] cursor-pointer inline-flex items-center gap-1 group-hover:translate-x-1 transition-all duration-300"
+                            >
+                                Read more →
+                            </Link>
                         </div>
                     </div>
                 </div>
 
                 {/* Dots Navigation */}
                 <div className="absolute bottom-2 sm:bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 sm:gap-2 md:gap-3">
-                    {section_1.map((_, index) => (
+                    {data.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => goToSlide(index)}
@@ -178,12 +155,10 @@ function Main() {
                 </div>
 
                 {/* Slide Counter */}
-                <div className="absolute bottom-2 sm:bottom-4 md:bottom-6 right-2 sm:right-4 md:right-6 z-20 text-black/50 sm:text-[1.2rem] font-medium bg-rose-400/40   backdrop-blur-sm px-2 py-0.5 sm:px-3 sm:py-1 rounded-full">
-                    {currentIndex + 1} / {section_1.length}
+                <div className="absolute bottom-2 sm:bottom-4 md:bottom-6 right-2 sm:right-4 md:right-6 z-20 text-black/50 sm:text-[1.2rem] font-medium bg-rose-400/40 backdrop-blur-sm px-2 py-0.5 sm:px-3 sm:py-1 rounded-full">
+                    {currentIndex + 1} / {data.length}
                 </div>
             </div>
         </section>
     );
 }
-
-export default Main;

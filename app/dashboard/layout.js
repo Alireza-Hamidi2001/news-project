@@ -17,12 +17,12 @@ async function DashboardLayout({ children }) {
 
     return (
         <div className="mt-20 grid grid-cols-[25rem_1fr] min-h-[calc(100vh-5rem)]">
-            <DashboardSideNavigation isAdmin={isAdmin} isWriter={isWriter} user={user} />
-
-            {/* Main Content */}
-            <main className="p-8">
-                {children}
-            </main>
+            <DashboardSideNavigation
+                isAdmin={isAdmin}
+                isWriter={isWriter}
+                user={user}
+            />
+            <main className="p-8 dark:bg-zinc-900">{children}</main>
         </div>
     );
 }

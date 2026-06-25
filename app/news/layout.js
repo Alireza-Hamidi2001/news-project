@@ -1,12 +1,11 @@
+// app/news/layout.js
 import SideNavigation from "../_components/SideNavigation";
 
-function layout({ children }) {
+export default function NewsLayout({ children }) {
     return (
-        <div>
+        <div className="flex">
             <SideNavigation />
-            <div>{children}</div>
+            <div className="flex-1">{children}</div>
         </div>
     );
 }
-
-export default layout;

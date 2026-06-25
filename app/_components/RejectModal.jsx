@@ -1,39 +1,17 @@
-// app/_components/LogoutModal.jsx
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { FaSignOutAlt, FaTimes } from "react-icons/fa";
+import { FaTimes, FaExclamationTriangle } from "react-icons/fa";
 import { IoWarningOutline } from "react-icons/io5";
 
-export default function LogoutModal({ isOpen, onClose }) {
-    const router = useRouter();
+export default function RejectModal({ isOpen, onClose, onConfirm, postTitle }) {
+    const [reason, setReason] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleLogout = async () => {
+    const handleConfirm = async () => {
         setLoading(true);
-        const toastId = toast.loading("Logging out...");
-
-        try {
-            const res = await fetch("/api/auth/logout", {
-                method: "POST",
-            });
-
-            if (!res.ok) {
-                toast.error("Logout failed", { id: toastId });
-                setLoading(false);
-                return;
-            }
-
-            toast.success("Logged out successfully 👋", { id: toastId });
-            onClose();
-            router.push("/login");
-            router.refresh();
-        } catch (error) {
-            toast.error("Something went wrong", { id: toastId });
-            setLoading(false);
-        }
+        await onConfirm(reason);
+        setLoading(false);
     };
 
     if (!isOpen) return null;
@@ -52,56 +30,76 @@ export default function LogoutModal({ isOpen, onClose }) {
                     className="bg-white dark:bg-zinc-900 rounded-sm shadow-2xl max-w-md w-[75vw] sm:w-[50vw] md:w-[35vw] p-12 border border-gray-200 dark:border-gray-700"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {/* Header */}
-                    <div className="relative flex justify-between items-center mb-6">
-                        <button
-                            onClick={onClose}
-                            className="absolute top-2 right-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
-                            disabled={loading}
-                        >
-                            <FaTimes className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                        </button>
-                    </div>
+                    {/* Close Button */}
+                    <button
+                        onClick={onClose}
+                        className="absolute top-4 right-4 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
+                        disabled={loading}
+                    >
+                        <FaTimes className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    </button>
 
                     {/* Icon */}
                     <div className="flex justify-center mb-4 -mt-36 z-30">
                         <div className="w-36 h-36 rounded-full bg-white dark:bg-zinc-900 flex items-center justify-center">
-                            <FaSignOutAlt className="w-15 h-15 text-red-500 dark:text-red-400" />
+                            <FaExclamationTriangle className="w-15 h-15 text-red-500 dark:text-red-400" />
                         </div>
                     </div>
 
                     {/* Message */}
                     <div className="text-center mb-6 mainText">
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+                            Reject Post
+                        </h3>
                         <p className="text-gray-600 dark:text-gray-300">
-                            Are you sure you want to logout?
+                            Are you sure you want to reject this post?
                         </p>
-                        <p className="text-gray-400 dark:text-gray-500 mt-1">
-                            You will need to login again to access your
-                            dashboard
+                        {postTitle && (
+                            <p className="text-gray-500 dark:text-gray-400 mt-1 text-[1.2rem]">
+                                <span className="font-medium">{postTitle}</span>
+                            </p>
+                        )}
+                        <p className="text-gray-400 dark:text-gray-500 mt-2 text-[1.2rem]">
+                            This action cannot be undone.
                         </p>
                     </div>
 
+                    {/* Reason Input */}
+                    <div className="mb-6">
+                        <label className="label text-[1.2rem] mb-1 block">
+                            Reason (Optional)
+                        </label>
+                        <textarea
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
+                            placeholder="Why are you rejecting this post?"
+                            className="w-full p-3 bg-gray-50 dark:bg-zinc-800 border border-gray-300 dark:border-gray-600 rounded-sm focus:outline-none focus:ring focus:ring-red-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none"
+                            rows="3"
+                            disabled={loading}
+                        />
+                    </div>
+
                     {/* Buttons */}
-                    <div className="flex w-50% mx-auto gap-3 mt-10 mainText">
+                    <div className="flex w-50% mx-auto gap-3 mainText">
                         <button
                             onClick={onClose}
                             disabled={loading}
-                            className="cancelBtn bg-gray-100 dark:bg-gray-800"
+                            className="cancelBtn bg-gray-100 dark:bg-gray-800 flex-1"
                         >
                             Cancel
                         </button>
                         <button
-                            onClick={handleLogout}
+                            onClick={handleConfirm}
                             disabled={loading}
-                            className="confirmBtn bg-red-500 hover:bg-red-600"
+                            className="confirmBtn bg-red-500 hover:bg-red-600 flex-1"
                         >
                             {loading ? (
                                 <>
                                     <span className="animate-spin">⏳</span>
-                                    Logging out...
+                                    Rejecting...
                                 </>
                             ) : (
-                                <>Confirm</>
+                                <>Reject</>
                             )}
                         </button>
                     </div>

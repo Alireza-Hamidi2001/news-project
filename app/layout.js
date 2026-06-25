@@ -14,6 +14,9 @@ import "./_styles/globals.css";
 import { ThemeProvider } from "./_components/ThemeProvider";
 import Header from "./_components/Header";
 import { Toaster } from "react-hot-toast";
+import { FaRegCircleCheck } from "react-icons/fa6";
+
+import { ImCross } from "react-icons/im";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -54,28 +57,33 @@ export default function RootLayout({ children }) {
                                 color: "#fff",
                                 padding: "8px",
                                 borderRadius: "2px",
+                                fontSize: "1.6rem",
                             },
                             success: {
                                 duration: 3000,
-                                icon: "✅",
+                                icon: (
+                                    <FaRegCircleCheck className="text-white" />
+                                ),
                                 style: {
-                                    background: "#22c55e",
-                                    color: "#fff",
+                                    background: "#e1ffdb",
+                                    color: "#00a572",
+                                    fontSize: "1.6rem",
                                 },
                             },
                             error: {
                                 duration: 4000,
-                                icon: "❌",
+                                icon: <ImCross className="text-red-500" />,
                                 style: {
-                                    background: "#ef4444",
-                                    color: "#fff",
+                                    background: "#ffedeb",
+                                    color: "#ea2901",
+                                    fontSize: "1.6rem",
                                 },
                             },
                             loading: {
                                 duration: Infinity,
                                 style: {
-                                    background: "#3b82f6",
-                                    color: "#fff",
+                                    background: "#95cadb",
+                                    color: "#1d2951",
                                 },
                             },
                         }}
