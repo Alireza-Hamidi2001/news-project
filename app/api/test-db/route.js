@@ -1,5 +1,5 @@
 // app/api/test-db/route.js
-import { supabase } from "@/lib/supabase/server";
+import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
 export async function GET() {
