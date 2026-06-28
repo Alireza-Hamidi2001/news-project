@@ -1,13 +1,13 @@
-// app/api/news/pending/route.js
+// app/api/users/route.js
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/auth";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
     try {
+        // ✅ بررسی ادمین بودن
         const currentUser = await getCurrentUser();
 
-        // فقط ادمین میتونه پست‌های pending رو ببینه
         if (!currentUser || currentUser.role !== "admin") {
             return NextResponse.json(
                 { error: "Unauthorized" },
@@ -15,36 +15,37 @@ export async function GET() {
             );
         }
 
-        const { data: posts, error } = await supabaseAdmin
-            .from("news")
+        // ✅ دریافت همه کاربران
+        const { data: users, error } = await supabaseAdmin
+            .from("users")
             .select(
                 `
-                *,
-                author:author_id (
-                    id,
-                    full_name,
-                    username,
-                    avatar_url
-                )
+                id,
+                full_name,
+                email,
+                role,
+                is_active,
+                created_at,
+                last_login,
+                avatar_url
             `,
             )
-            .eq("status", "pending")
             .order("created_at", { ascending: false });
 
         if (error) {
-            console.error("Error fetching pending posts:", error);
+            console.error("Error fetching users:", error);
             return NextResponse.json(
-                { error: "Failed to fetch pending posts" },
+                { error: "Failed to fetch users: " + error.message },
                 { status: 500 },
             );
         }
 
         return NextResponse.json({
             success: true,
-            posts: posts || [],
+            users: users || [],
         });
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error in get users:", error);
         return NextResponse.json(
             { error: error.message || "Internal server error" },
             { status: 500 },

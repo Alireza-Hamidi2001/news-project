@@ -98,7 +98,7 @@ export default function NewWriterPage() {
                 throw new Error(data.error || "Failed to create writer");
             }
 
-            toast.success("Writer created successfully! ✍️", { id: toastId });
+            toast.success("Writer created successfully!", { id: toastId });
 
             // Reset form
             setFormData({
@@ -118,7 +118,7 @@ export default function NewWriterPage() {
     };
 
     return (
-        <div className="p-8 max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
@@ -193,7 +193,7 @@ export default function NewWriterPage() {
                                             ? "border-red-500"
                                             : "border-gray-300 dark:border-gray-600"
                                     } rounded-sm focus:outline-none focus:ring focus:ring-emerald-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
-                                    placeholder="Enter username (min 3 characters)"
+                                    placeholder="username (min 3 characters)"
                                     disabled={loading}
                                 />
                             </div>
@@ -255,7 +255,7 @@ export default function NewWriterPage() {
                                             ? "border-red-500"
                                             : "border-gray-300 dark:border-gray-600"
                                     } rounded-sm focus:outline-none focus:ring focus:ring-emerald-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500`}
-                                    placeholder="Enter password (min 6 characters)"
+                                    placeholder="password (min 6 characters)"
                                     disabled={loading}
                                 />
                             </div>
@@ -300,7 +300,7 @@ export default function NewWriterPage() {
                         </div>
 
                         {/* Role Badge */}
-                        <div className="text-[1.2rem] tracking-wider flex items-center self-end gap-2 p-3 bg-emerald-100 dark:bg-emerald-900/20 rounded-sm border border-emerald-300 dark:border-emerald-800">
+                        <div className="text-[1rem] sm:text-[1.2rem] tracking-wider flex items-center self-end gap-2 p-3 bg-emerald-100 dark:bg-emerald-900/20 rounded-sm border border-emerald-300 dark:border-emerald-800">
                             <FaUserTag className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                             <span className="text-gray-700 dark:text-gray-300">
                                 Role:{" "}
@@ -314,7 +314,7 @@ export default function NewWriterPage() {
                         </div>
 
                         {/* Buttons */}
-                        <div className="flex items-center gap-3 pt-4">
+                        <div className="col-span-2 lg:col-span-1 flex items-center gap-3 pt-4">
                             <button
                                 type="submit"
                                 disabled={loading}

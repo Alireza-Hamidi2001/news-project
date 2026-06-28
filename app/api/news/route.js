@@ -1,3 +1,4 @@
+// app/api/news/route.js
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/auth";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -57,14 +58,16 @@ export async function POST(request) {
                 .toString(36)
                 .substring(7)}.${fileExt}`;
 
-            const { data: uploadData, error: uploadError } =
-                await supabaseAdmin.storage
-                    .from("covers")
-                    .upload(fileName, coverFile, {
-                        contentType: coverFile.type,
-                        cacheControl: "3600",
-                        upsert: true,
-                    });
+            const bytes = await coverFile.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+
+            const { error: uploadError } = await supabaseAdmin.storage
+                .from("covers")
+                .upload(fileName, buffer, {
+                    contentType: coverFile.type,
+                    cacheControl: "3600",
+                    upsert: true,
+                });
 
             if (uploadError) {
                 console.error("❌ Upload error:", uploadError);
@@ -115,7 +118,7 @@ export async function POST(request) {
         }
 
         const message = isAdmin
-            ? "Post published successfully! 🎉"
+            ? "Post published successfully!"
             : "Post submitted for review. Waiting for admin approval.";
 
         console.log(`✅ [API News] Post created with status: ${postStatus}`);

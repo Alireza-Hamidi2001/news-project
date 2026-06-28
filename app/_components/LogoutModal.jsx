@@ -4,8 +4,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { FaSignOutAlt, FaTimes } from "react-icons/fa";
-import { IoWarningOutline } from "react-icons/io5";
+import { FaSignOutAlt, FaSpinner, FaTimes } from "react-icons/fa";
+import { FaRegHourglassHalf } from "react-icons/fa6";
 
 export default function LogoutModal({ isOpen, onClose }) {
     const router = useRouter();
@@ -26,7 +26,7 @@ export default function LogoutModal({ isOpen, onClose }) {
                 return;
             }
 
-            toast.success("Logged out successfully 👋", { id: toastId });
+            toast.success("Logged out successfully", { id: toastId });
             onClose();
             router.push("/login");
             router.refresh();
@@ -72,10 +72,10 @@ export default function LogoutModal({ isOpen, onClose }) {
 
                     {/* Message */}
                     <div className="text-center mb-6 mainText">
-                        <p className="text-gray-600 dark:text-gray-300">
-                            Are you sure you want to logout?
+                        <p className="text-[2rem] text-gray-600 dark:text-gray-300">
+                            Are you sure you want to logout ?
                         </p>
-                        <p className="text-gray-400 dark:text-gray-500 mt-1">
+                        <p className="text-[1.4rem] text-gray-400 dark:text-gray-500 mt-1">
                             You will need to login again to access your
                             dashboard
                         </p>
@@ -97,7 +97,8 @@ export default function LogoutModal({ isOpen, onClose }) {
                         >
                             {loading ? (
                                 <>
-                                    <span className="animate-spin">⏳</span>
+                                    {/* <FaRegHourglassHalf className="w-5 h-5 animate-spin" /> */}
+                                    <FaSpinner className="animate-spin" />
                                     Logging out...
                                 </>
                             ) : (

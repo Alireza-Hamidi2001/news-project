@@ -1,14 +1,14 @@
-// app/dashboard/new-post/page.jsx
+// app/_components/NewPostForm.jsx
 "use client";
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { FaLightbulb } from "react-icons/fa6";
 import {
     FaSpinner,
     FaSave,
-    FaTimes,
     FaImage,
     FaTrash,
     FaCheck,
@@ -19,7 +19,7 @@ import {
 } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 
-export default function NewPostPage() {
+export default function NewPostForm({ userRole, categories = [] }) {
     const router = useRouter();
     const fileInputRef = useRef(null);
     const [loading, setLoading] = useState(false);
@@ -37,6 +37,8 @@ export default function NewPostPage() {
         is_featured: false,
     });
     const [errors, setErrors] = useState({});
+
+    const isAdmin = userRole === "admin";
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -101,7 +103,6 @@ export default function NewPostPage() {
         }
 
         if (!formData.slug.trim()) {
-            // تولید خودکار slug از title
             const slug = formData.title
                 .toLowerCase()
                 .replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, "")
@@ -143,6 +144,7 @@ export default function NewPostPage() {
                 "is_featured",
                 formData.is_featured ? "true" : "false",
             );
+            formDataToSend.append("status", formData.status);
 
             if (coverFile) {
                 formDataToSend.append("cover_image", coverFile);
@@ -159,12 +161,12 @@ export default function NewPostPage() {
                 throw new Error(data.error || "Failed to create post");
             }
 
-            // ✅ پیام مناسب بر اساس وضعیت
+            // پیام مناسب بر اساس وضعیت و نقش
             if (data.status === "published") {
                 toast.success("Post published successfully! 🎉", {
                     id: toastId,
                 });
-            } else {
+            } else if (data.status === "pending") {
                 toast.success(
                     "Post submitted for review. Waiting for admin approval.",
                     {
@@ -172,6 +174,10 @@ export default function NewPostPage() {
                         duration: 5000,
                     },
                 );
+            } else {
+                toast.success("Post saved as draft.", {
+                    id: toastId,
+                });
             }
 
             // Reset form
@@ -189,11 +195,11 @@ export default function NewPostPage() {
             setCoverFile(null);
             setIsCoverChanged(false);
 
-            // اگه ادمین بود به my-posts بره، وگرنه به dashboard
-            const redirectPath =
-                data.status === "published"
-                    ? "/dashboard/my-posts"
-                    : "/dashboard";
+            // هدایت بر اساس نقش و وضعیت
+            let redirectPath = "/dashboard/my-posts";
+            if (data.status === "pending" && userRole === "writer") {
+                redirectPath = "/dashboard";
+            }
 
             setTimeout(() => {
                 router.push(redirectPath);
@@ -208,32 +214,26 @@ export default function NewPostPage() {
         }
     };
 
-    // لیست دسته‌بندی‌ها (بعداً از دیتابیس میاد)
-    const categories = [
-        { id: 1, name: "Politics" },
-        { id: 2, name: "Technology" },
-        { id: 3, name: "Sports" },
-        { id: 4, name: "Economy" },
-        { id: 5, name: "Health" },
-        { id: 6, name: "Science" },
-        { id: 7, name: "Entertainment" },
-        { id: 8, name: "World" },
-    ];
-
     return (
         <div className="p-8 max-w-6xl mx-auto">
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <FaNewspaper className="bg-blue-100 p-2 dark:bg-blue-900/30 rounded-lg w-12 h-12 text-blue-600 dark:text-blue-400" />
+                        <div className="flex items-center gap-4">
+                            <FaNewspaper className="bg-blue-100 p-2 dark:bg-blue-900/30 rounded-lg w-18 h-18 text-blue-600 dark:text-blue-400" />
                             <h1 className="postTitle font-comic">
                                 Create New Post
                             </h1>
                         </div>
-                        <p className="subTitle">
+                        <p className="subTitle flex items-center gap-2">
                             Write and publish a new article
+                            {!isAdmin && (
+                                <span className="text-yellow-600 dark:text-yellow-400 text-[1.2rem] flex items-center gap-1">
+                                    <FaLightbulb className="w-8 h-8" />{" "}
+                                    (Requires admin approval)
+                                </span>
+                            )}
                         </p>
                     </div>
                 </div>
@@ -467,12 +467,6 @@ export default function NewPostPage() {
                                         <option value="scrollable">
                                             Scrollable (Horizontal)
                                         </option>
-                                        <option value="breaking">
-                                            Breaking News
-                                        </option>
-                                        <option value="editor-pick">
-                                            Editor&apos;s Pick
-                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -494,14 +488,23 @@ export default function NewPostPage() {
                                         disabled={loading}
                                     >
                                         <option value="draft">Draft</option>
-                                        <option value="published">
-                                            Published
-                                        </option>
+                                        {isAdmin && (
+                                            <option value="published">
+                                                Published
+                                            </option>
+                                        )}
                                         <option value="archived">
                                             Archived
                                         </option>
                                     </select>
                                 </div>
+                                {!isAdmin && (
+                                    <p className="flex items-center gap-2 mt-4 text-[1.2rem] text-yellow-600 dark:text-yellow-400">
+                                        <FaLightbulb className="w-8 h-8" />{" "}
+                                        Writers can only publish with admin
+                                        approval
+                                    </p>
+                                )}
                             </div>
 
                             <div className="space-y-1.5 flex items-center">

@@ -9,6 +9,8 @@ import ThemeToggle from "./ThemeToggle";
 import LogoutButton from "./LogoutButton";
 import { getCurrentUser } from "@/lib/auth/auth";
 import { LuLogIn } from "react-icons/lu";
+import { BiTrash } from "react-icons/bi";
+import DeleteAccountButton from "./DeleteAccountButton";
 
 async function Header() {
     const user = await getCurrentUser();
@@ -43,6 +45,7 @@ async function Header() {
                                 <span className="absolute -bottom-1 right-0 w-4 h-4 rounded-full bg-green-400 border-2 border-white dark:border-zinc-950"></span>
                             </Link>
                             <LogoutButton variant="icon" />
+                            <DeleteAccountButton variant="icon" />
                         </>
                     ) : (
                         <Link href="/login">

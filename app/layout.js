@@ -14,9 +14,6 @@ import "./_styles/globals.css";
 import { ThemeProvider } from "./_components/ThemeProvider";
 import Header from "./_components/Header";
 import { Toaster } from "react-hot-toast";
-import { FaRegCircleCheck } from "react-icons/fa6";
-
-import { ImCross } from "react-icons/im";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -39,7 +36,7 @@ export default function RootLayout({ children }) {
             lang="en"
             suppressHydrationWarning
             className={`text-[50%] sm:text-[57.5] md:text-[64.5%] ${geistSans.variable} ${geistMono.variable} ${lime.variable} ${comic.variable} ${caveat.variable} ${coiny.variable} ${openSans.variable} ${arizonia.variable} ${audioWide.variable} ${courgette.variable} ${kottaOne.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-            <body className="min-h-full flex flex-col">
+            <body className="min-h-full flex flex-col p-2">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
@@ -48,47 +45,72 @@ export default function RootLayout({ children }) {
                     enableColorScheme={false}>
                     <Header />
                     {children}
-                    <Toaster
-                        position="top-center"
-                        toastOptions={{
+                </ThemeProvider>
+
+                <Toaster
+                    position="top-center"
+                    containerStyle={{
+                        zIndex: 99999999, // ✅ بالاترین z-index
+                    }}
+                    toastOptions={{
+                        duration: 3000,
+                        style: {
+                            background: "#363636",
+                            color: "#fff",
+                            padding: "12px 24px",
+                            borderRadius: "8px",
+                            fontSize: "1.6rem",
+                            zIndex: 99999999,
+                            boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+                        },
+                        success: {
                             duration: 3000,
                             style: {
-                                background: "#363636",
-                                color: "#fff",
-                                padding: "8px",
-                                borderRadius: "2px",
+                                background: "#e1ffdb",
+                                color: "#00a572",
+                                border: "1px solid #00f572",
                                 fontSize: "1.6rem",
+                                padding: "12px 24px",
+                                borderRadius: "8px",
+                                zIndex: 99999999,
+                                boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
                             },
-                            success: {
-                                duration: 3000,
-                                icon: (
-                                    <FaRegCircleCheck className="text-white" />
-                                ),
-                                style: {
-                                    background: "#e1ffdb",
-                                    color: "#00a572",
-                                    fontSize: "1.6rem",
-                                },
+                            iconTheme: {
+                                primary: "#00a572",
+                                secondary: "#e1ffdb",
                             },
-                            error: {
-                                duration: 4000,
-                                icon: <ImCross className="text-red-500" />,
-                                style: {
-                                    background: "#ffedeb",
-                                    color: "#ea2901",
-                                    fontSize: "1.6rem",
-                                },
+                        },
+                        error: {
+                            duration: 4000,
+                            style: {
+                                background: "#ffedeb",
+                                color: "#ea2901",
+                                border: "1px solid #ea0501",
+                                fontSize: "1.6rem",
+                                padding: "12px 24px",
+                                borderRadius: "8px",
+                                zIndex: 99999999,
+                                boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
                             },
-                            loading: {
-                                duration: Infinity,
-                                style: {
-                                    background: "#95cadb",
-                                    color: "#1d2951",
-                                },
+                            iconTheme: {
+                                primary: "#ea2901",
+                                secondary: "#ffedeb",
                             },
-                        }}
-                    />
-                </ThemeProvider>
+                        },
+                        loading: {
+                            duration: Infinity,
+                            style: {
+                                background: "#95cadb",
+                                color: "#1d2951",
+                                border: "1px solid #95cafb",
+                                padding: "12px 24px",
+                                borderRadius: "8px",
+                                zIndex: 99999999,
+                                boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
+                            },
+                        },
+                    }}
+                />
             </body>
         </html>
     );

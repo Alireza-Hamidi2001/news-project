@@ -74,10 +74,10 @@ async function DashboardPage() {
             icon: FaUserTag,
             label: "Role",
             value: getRoleLabel(user.role),
-            color: "text-purple-500",
-            bg: "bg-purple-50 dark:bg-purple-900/20",
-            border: "border-purple-200 dark:border-purple-800",
-            glow: "text-purple-500",
+            color: "text-red-500",
+            bg: "bg-red-50 dark:bg-red-900/20",
+            border: "border-red-200 dark:border-red-800",
+            glow: "text-red-500",
             badge: true,
         },
         {
@@ -114,7 +114,7 @@ async function DashboardPage() {
     ];
 
     return (
-        <div className="p-8 max-w-6xl mx-auto animate-fadeIn">
+        <div className="max-w-6xl mx-auto animate-fadeIn">
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
@@ -136,11 +136,11 @@ async function DashboardPage() {
             </div>
 
             {/* Info Cards - One Row */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {infoItems.map((item, index) => (
                     <div
                         key={index}
-                        className={`group relative overflow-hidden rounded-xl border ${item.border} ${item.bg} p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:-translate-y-1 animate-slideUp`}
+                        className={`group relative overflow-hidden rounded-xl border ${item.border} ${item.bg} p-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-slideUp`}
                         style={{ animationDelay: `${index * 50}ms` }}
                     >
                         <div className="flex flex-col items-start gap-2">

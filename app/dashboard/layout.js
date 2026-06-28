@@ -16,13 +16,15 @@ async function DashboardLayout({ children }) {
     const isWriter = user.role === "writer";
 
     return (
-        <div className="mt-20 grid grid-cols-[25rem_1fr] min-h-[calc(100vh-5rem)]">
+        <div className="mt-20 grid grid-cols-[18rem_1fr] md:grid-cols-[20rem_1fr] lg:md:grid-cols-[25rem_1fr] min-h-[calc(100vh-5rem)]">
             <DashboardSideNavigation
                 isAdmin={isAdmin}
                 isWriter={isWriter}
                 user={user}
             />
-            <main className="p-8 dark:bg-zinc-900">{children}</main>
+            <main className="p-2 md:p-4 lg:p-8 col-span-2 sm:col-span-1 dark:bg-zinc-900">
+                {children}
+            </main>
         </div>
     );
 }

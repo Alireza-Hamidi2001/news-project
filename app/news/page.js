@@ -45,7 +45,7 @@ export default async function NewsPage() {
     }
 
     return (
-        <div className="pl-68 pt-20 min-h-screen bg-gray-100 dark:bg-zinc-800">
+        <div className="sm:pl-68 pt-20 min-h-screen bg-gray-100 dark:bg-zinc-800">
             <Main data={mainNews} />
             <Others data={othersNews} />
             <ScrollableCards data={scrollableNews} />

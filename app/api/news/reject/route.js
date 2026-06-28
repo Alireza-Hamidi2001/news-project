@@ -1,4 +1,4 @@
-// app/api/news/approve/route.js
+// app/api/news/reject/route.js
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/auth";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -15,7 +15,7 @@ export async function PUT(request) {
         }
 
         const body = await request.json();
-        const { postId } = body;
+        const { postId, reason } = body;
 
         if (!postId) {
             return NextResponse.json(
@@ -24,15 +24,15 @@ export async function PUT(request) {
             );
         }
 
-        // ✅ فقط approve
+        // ✅ فقط reject
         const updateData = {
-            status: "published",
-            published_at: new Date().toISOString(),
-            approved_by: currentUser.id,
-            approved_at: new Date().toISOString(),
-            rejection_reason: null,
-            rejected_by: null,
-            rejected_at: null,
+            status: "rejected",
+            rejected_by: currentUser.id,
+            rejected_at: new Date().toISOString(),
+            rejection_reason: reason || "No reason provided",
+            approved_by: null,
+            approved_at: null,
+            published_at: null,
         };
 
         const { data, error } = await supabaseAdmin
@@ -44,16 +44,16 @@ export async function PUT(request) {
             .single();
 
         if (error) {
-            console.error("Error approving post:", error);
+            console.error("Error rejecting post:", error);
             return NextResponse.json(
-                { error: "Failed to approve post" },
+                { error: "Failed to reject post" },
                 { status: 500 },
             );
         }
 
         return NextResponse.json({
             success: true,
-            message: "Post approved successfully!",
+            message: "Post rejected successfully!",
             post: data,
         });
     } catch (error) {

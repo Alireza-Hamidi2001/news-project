@@ -22,7 +22,7 @@ function ThemeToggle() {
             className="ml-1 rounded-lg hover:scale-1.2 duration-200 transition-all"
         >
             {theme === "dark" ? (
-                <GoSun className="w-7 h-7 text-yellow-500" />
+                <GoSun className="w-7 h-7 text-zinc-800 dark:text-amber-50" />
             ) : (
                 <LuMoon className="w-7 h-7" />
             )}

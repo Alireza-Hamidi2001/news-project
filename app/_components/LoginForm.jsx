@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { LuLogIn } from "react-icons/lu";
 import { FaKey, FaUser } from "react-icons/fa6";
 import { IoWarning } from "react-icons/io5";
+import { FaSpinner } from "react-icons/fa";
 
 export default function LoginForm() {
     const router = useRouter();
@@ -30,12 +31,14 @@ export default function LoginForm() {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error(data.error || "Login failed", { id: toastId });
+                toast.error(data.error || "Login failed !", { id: toastId });
                 setLoading(false);
                 return;
             }
 
-            toast.success("Welcome back!", { id: toastId });
+            toast.success("Login successfully . Welcome back !", {
+                id: toastId,
+            });
 
             // رفرش صفحه برای بروزرسانی وضعیت
             router.push("/dashboard");
@@ -52,15 +55,7 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="w-[95vw] sm:w-[80vw] md:w-[40vw] grid grid-cols-2 shadow-lg shadow-black/10 dark:shadow-white/10">
-            <div className="bg-gray-200 dark:bg-zinc-800 flex items-center justify-center text-[1.2rem] p-6">
-                <p className="text-gray-700 dark:text-gray-300">
-                    <IoWarning className="w-12 h-12 mx-auto mb-4" />
-                    Access is restricted to admins and authors only. If you wish
-                    to contribute and publish news, please contact the admin to
-                    arrange for an account to be set up for you.
-                </p>
-            </div>
+        <div className="w-[65vw] sm:w-[80vw] md:w-[70vw] lg:w-[50vw] xl:w-[40vw] grid grid-cols-1 sm:grid-cols-2 shadow-lg shadow-black/10 dark:shadow-white/10">
             <form
                 onSubmit={handleSubmit}
                 className="p-12 px-18 bg-gray-100 dark:bg-zinc-900 flex flex-col justify-center items-center"
@@ -127,7 +122,14 @@ export default function LoginForm() {
                     disabled={loading}
                     className="bg-blue-400 text-white rounded-sm hover:cursor-pointer hover:-translate-y-1 transition-all duration-200 px-8 py-2 text-[1.4rem] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {loading ? "Logging in..." : "Login"}
+                    {loading ? (
+                        <div className="flex items-center gap-2">
+                            <FaSpinner className="animate-spin" />
+                            Logging in...
+                        </div>
+                    ) : (
+                        "Login"
+                    )}
                 </button>
 
                 {loading && (
@@ -136,6 +138,14 @@ export default function LoginForm() {
                     </div>
                 )}
             </form>
+            <div className="bg-gray-200 dark:bg-zinc-800 flex items-center justify-center text-[1.6rem] sm:text-[1.2rem] p-6">
+                <p className="text-gray-700 dark:text-gray-300">
+                    <IoWarning className="w-12 h-12 mx-auto mb-4" />
+                    Access is restricted to admins and authors only. If you wish
+                    to contribute and publish news, please contact the admin to
+                    arrange for an account to be set up for you.
+                </p>
+            </div>
         </div>
     );
 }

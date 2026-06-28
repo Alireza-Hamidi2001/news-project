@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
+import { IoNotifications } from "react-icons/io5";
 
 export default function Others({ data = [] }) {
     if (!data || data.length === 0) {
@@ -15,7 +16,8 @@ export default function Others({ data = [] }) {
                     </h2>
                 </div>
                 <div className="bg-gray-200 dark:bg-zinc-700 rounded-lg p-8 text-center">
-                    <p className="text-gray-500 dark:text-gray-400 text-xl">
+                    <p className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-xl">
+                        <IoNotifications className="w-8 h-8" />
                         No posts in Others section
                     </p>
                 </div>

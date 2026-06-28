@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight, FaUser } from "react-icons/fa";
 import Link from "next/link";
+import { IoNotifications } from "react-icons/io5";
 
 export default function Main({ data = [] }) {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -16,7 +17,8 @@ export default function Main({ data = [] }) {
         return (
             <section className="mb-4 md:mb-10 lg:mb-20 w-full overflow-hidden relative group">
                 <div className="h-[500px] sm:h-[550px] md:h-[calc(100vh-10rem)] lg:h-[calc(100vh-10rem)] flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-lg">
-                    <p className="text-gray-500 dark:text-gray-400 text-xl">
+                    <p className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-xl">
+                        <IoNotifications className="w-8 h-8" />
                         No posts in Main section
                     </p>
                 </div>

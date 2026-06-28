@@ -189,7 +189,7 @@ export default function EditProfilePage() {
                 setAvatarFile(null);
             }
 
-            toast.success("Profile updated successfully! ✅", { id: toastId });
+            toast.success("Profile updated successfully!", { id: toastId });
 
             // رفرش صفحه و هدر
             router.refresh();
@@ -216,7 +216,7 @@ export default function EditProfilePage() {
     }
 
     return (
-        <div className="p-8 max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
